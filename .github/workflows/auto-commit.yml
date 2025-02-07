@@ -2,9 +2,10 @@ name: Daily Repository Update
 
 on:
   schedule:
-    - cron: '50 12 * * *'  # 
+    - cron: '00 13 * * *'  # 
   workflow_dispatch:  # Allows manual triggering
-
+permissions:
+  contents: write
 jobs:
   update_repo:
     runs-on: ubuntu-latest
