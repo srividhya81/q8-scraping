@@ -2,10 +2,12 @@ name: Daily Repository Update
 
 on:
   schedule:
-    - cron: '00 13 * * *'  # 
+    - cron: '30 13 * * *'  # Runs daily at 13:30 UTC
   workflow_dispatch:  # Allows manual triggering
+
 permissions:
-  contents: write
+  contents: write  # Ensures the action can push changes
+
 jobs:
   update_repo:
     runs-on: ubuntu-latest
@@ -13,8 +15,10 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Ensures full repo history is available
 
-      - name: 23ds1000022@ds.study.iitm.ac.in
+      - name: Configure Git (23ds1000022@ds.study.iitm.ac.in)
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "23ds1000022@ds.study.iitm.ac.in"
@@ -26,5 +30,9 @@ jobs:
 
       - name: Commit Changes
         run: |
-          git commit -m "Automated daily update - $(date)"
-          git push
+          git commit -m "Automated daily update - $(date)" || echo "No changes to commit"
+
+      - name: Push Changes
+        run: |
+          git branch -a  # Debug: Show available branches
+          git push origin HEAD:main  # Ensure push to correct branch
